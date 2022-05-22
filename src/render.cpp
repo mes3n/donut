@@ -5,8 +5,8 @@
 void SetCursorPos(int x, int y) {
 
     // offsets for where to display the donut
-    int offY = 5;
-    int offX = 5 * 2;
+    int offY = 3;
+    int offX = 3 * 2;
 
     //  setts the cursor position to x, y with the width and height of a charactes as units
     printf("\033[%d;%dH", offY + y + 1, offX + x + 1);
@@ -28,8 +28,6 @@ void render (std::array<int, 576> array, unsigned int len_x, unsigned int len_y)
     static char luminosity[] = " .,,-~::;!**++##$$@";
     int maxIndex = 18;
 
-    clear();
-
     for (unsigned int y = 0; y < len_y; y++) {
         for (unsigned int x = 0; x < len_x; x++) {
 
@@ -40,11 +38,5 @@ void render (std::array<int, 576> array, unsigned int len_x, unsigned int len_y)
             putchar(luminosity[index]);  // put a character at cursor position
 
         }
-    }
-
-    // offset under the donut
-    for (unsigned int i = 0; i < 5; i++) {
-
-        printf("\n");
     }
 }

@@ -44,6 +44,8 @@ int main (int argc, char **argv) {
     float dry = M_PI/72;
     float drz = 0;
 
+    clear();
+
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
             std::cout << "\nuse -dx, -dy, and/or -dz to enter custom values for rotations,\n" \
