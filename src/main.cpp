@@ -127,8 +127,8 @@ int main (int argc, char **argv) {
                 rotate_around_z(points, rz);
 
                 // round and convert to integers to be used in list for rendering
-                int a = static_cast<int>(round(points[0]) + (R + r));
-                int b = static_cast<int>(round(points[1]) + (R + r));
+                int a = static_cast<int>(round(points[0]) + (LEN_X*0.5)-1);
+                int b = static_cast<int>(round(points[1]) + (LEN_Y*0.5)-1);
                 int c = static_cast<int>(round(points[2]) + (R + r));
 
                 // std::cout << c << "\n";
