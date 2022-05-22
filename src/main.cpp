@@ -1,10 +1,10 @@
+#include <iostream>
 #include <math.h>
-#include <cstring>
+#include <string.h>
 
 #include "render.hpp"
 #include "grid.hpp"
 
-#include <iostream>
 
 void rotate_around_x (float * point, float theta) {
     float y = point[1];
@@ -32,99 +32,121 @@ void rotate_around_z (float * point, float theta) {
 
 int main (int argc, char **argv) {
 
-    const int nCORNERS = 32;
-    const int donutRad = 16;
-    const int R = RADIUS;
-    const int r = 1;
+    // sum of these must be <= 12 (0.5*min(LEN_X, LEN_Y))
+    float R = 7;
+    float r = 3;
+
     float rx = 0;
     float ry = 0;
     float rz = 0;
 
-    // float drx
-    // float dry
-    // float drz
+    float drx = M_PI/72;
+    float dry = M_PI/72;
+    float drz = 0;
+
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
+            std::cout << "\nuse -dx, -dy, and/or -dz to enter custom values for rotations,\n" \
+                      << "defualt values are approximatly 0.044 (pi/72) for x and y rotation.\n\n" \
+                      << "Use -R to change to radius of the whole donut,\n" \
+                      << "and use -r to change the radius of the donut's 'edge'\n" \
+                      << "The sum of R and r must be less than 12." \
+                      << "Defualt values are R=7 and r=3.\n\n";
+            return 0;
+        }
+
+        if (argv[i][0] == '-') {
+            try {
+                std::stof (argv[i + 1]);
+            }
+            catch (std::invalid_argument &) {
+                std::cout <<  "Enter a valid value for the argument.\n";
+                return 0;
+            }
+
+            if (argv[i][1] == 'd') {
+                drx = 0;
+                dry = 0;
+                drz = 0;
+            }
+
+        }
+    }
+
+    for (int i = 1; i < argc; i++) {
+
+        if (strcmp(argv[i], "-dx") == 0) {
+            if (i + 1 < argc) drx = std::stof (argv[i + 1]);
+        }
+        if (strcmp(argv[i], "-dy") == 0) {
+            if (i + 1 < argc) dry = std::stof (argv[i + 1]);
+        }
+        if (strcmp(argv[i], "-dz") == 0) {
+            if (i + 1 < argc) drz = std::stof (argv[i + 1]);
+        }
+        if (strcmp(argv[i], "-R") == 0) {
+            if (i + 1 < argc) R = std::stof (argv[i + 1]);
+        }
+        if (strcmp(argv[i], "-r") == 0) {
+            if (i + 1 < argc) r = std::stof (argv[i + 1]);
+        }
+    }
+
+    if (R + r > 0.5*std::min(LEN_X, LEN_Y)) {
+        std::cout << "the sum of R and r is too large, the donut wont fit!\n";
+        return 0;
+    }
+
+    const unsigned int bigCORNERS = pow(R, 2);
+    const unsigned int smaCORNERS = 2*pow(r, 2);
 
     while (true) {
-        grid.fill(0);
+        grid.fill(0);  // reset the grid's z values
 
-        for (unsigned int i = 0; i < nCORNERS; i++) {
+        for (unsigned int i = 0; i < bigCORNERS; i++) {
 
-            float theta = 2*M_PI*i / nCORNERS;
+            float theta = 2*M_PI*i / bigCORNERS;  // generate angle for subcircle in donut
 
-            // float points[3] = {  // rotates around y-axis
-            //     RADIUS*cos(theta)*cos(ry),
-            //     RADIUS*sin(theta),
-            //     -(RADIUS*cos(theta)*sin(ry))
-            // };
+            for (unsigned int ii = 0; ii < smaCORNERS; ii++) {
 
-            // float points[3] = {  // rotates around x- and y-axis
-            //     RADIUS*cos(theta)*cos(ry),
-            //     RADIUS*sin(theta)*cos(rx) + RADIUS*cos(theta)*sin(ry)*sin(rx),
-            //     RADIUS*sin(theta)*sin(rx) - RADIUS*cos(theta)*sin(ry)*cos(rx)
-            // };
+                float alpha = 2*M_PI*ii / smaCORNERS;  // generate ange for points in subcirlce
 
-            for (unsigned int ii = 0; ii < donutRad; ii++) {
-
-                float alpha = 2*M_PI*ii / donutRad;
-
+                // create to points
                 float x = (R + r*cos(alpha))*cos(theta);
                 float y = (R + r*cos(alpha))*sin(theta);
                 float z = r*sin(alpha);
 
+
                 float points[3] = {x, y, z};
 
-                // int a = x*cos(ry)*cos(rz) + y*(sin(rx)*sin(ry)*cos(rz) - cos(rx)*sin(rz)) + z*(cos(rx)*sin(ry)*cos(rz) + sin(rx)*sin(rz));
-                // int b = y*cos(rx) - z*sin(rx);
-                // int c = y*sin(rx) + z*cos(rx);
-
-                // // rotate around x
-                // point[1] = y*cos(rx) - z*sin(rx);
-                // point[2] = y*sin(rx) + z*cos(rx);
-
-                // // rotate around y
-                // point[0] = x*cos(ry) + z*sin(ry);
-                // point[2] = -x*sin(ry) + z*cos(ry);
-
+                // rotate the points my the matrixes
                 rotate_around_x(points, rx);
                 rotate_around_y(points, ry);
                 rotate_around_z(points, rz);
 
-                // printf("%f, %f, %f\n", points[0], points[1], points[2]);
+                // round and convert to integers to be used in list for rendering
+                int a = static_cast<int>(round(points[0]) + (R + r));
+                int b = static_cast<int>(round(points[1]) + (R + r));
+                int c = static_cast<int>(round(points[2]) + (R + r));
 
-                int a = static_cast<int>(round(points[0]) + R + r);
-                int b = static_cast<int>(round(points[1]) + R + r);
-                int c = static_cast<int>(round(points[2]) + R + r);
+                // std::cout << c << "\n";
 
-                // printf("%d, %d, %d\t %f, %f\n", a, b, c, theta, alpha);
-
-                grid[a*LEN_Y + b] = c;
+                // set the variable in the list the z value,
+                // this is then equivalent to the luminosity of the point
+                // and then used to set the correct character to the point
+                // uses the closest depth
+                grid[b*LEN_Y + a] = grid[b*LEN_Y + a] > c ? grid[b*LEN_Y + a] : c;
 
             }
-            // float y = RADIUS*sin(theta);
-            // float z = -(RADIUS*cos(theta)*sin(ry));
-            //
-            // points[1] = RADIUS*sin(theta)*cos(rx) + RADIUS*cos(theta)*sin(ry)*sin(rx);
-            // points[2] = RADIUS*sin(theta)*sin(rx) - RADIUS*cos(theta)*sin(ry)*cos(rx);
-
-            // printf("%f\n", points[2]);
-
-            // int a = static_cast<int>(round(points[0]) + RADIUS);
-            // int b = static_cast<int>(round(points[1]) + RADIUS);
-            // int c = static_cast<int>(round(points[2]) + RADIUS);
-            //
-            // grid[a*LEN_Y + b] = c;
-
-            //printf("%d, %d, %d\n", a, b, c);
-
         }
 
-        //printf("\n");
-        render(grid, LEN_X, LEN_Y);
-        rx += M_PI/72;
-        // ry += M_PI/72;
-        // rz += M_PI/108;
+        render(grid, LEN_X, LEN_Y);  // render the array of depth
+        // increase the rotations around the axis of the donut
+        rx += drx;
+        ry += dry;
+        rz += drz;
 
-        usleep(10000);
+        usleep(10000);  // visual
     }
 
     return 0;
