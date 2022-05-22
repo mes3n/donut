@@ -4,15 +4,18 @@
 
 void SetCursorPos(int x, int y) {
 
+    // offsets for where to display the donut
     int offY = 5;
     int offX = 5 * 2;
 
+    //  setts the cursor position to x, y with the width and height of a charactes as units
     printf("\033[%d;%dH", offY + y + 1, offX + x + 1);
 
 }
 
 void clear () {
 
+    // alternatives
     // std::cout << "\x1b[H";
     // std::system("clear");
     // printf("\x1b[H");
@@ -20,9 +23,10 @@ void clear () {
 
 }
 
-void render (std::array<int, 256> array, unsigned int len_x, unsigned int len_y) {
+void render (std::array<int, 576> array, unsigned int len_x, unsigned int len_y) {
 
-    static char luminosity[] = " .,-~:;!*#$@";
+    static char luminosity[] = " .,,-~::;!**++##$$@";
+    int maxIndex = 18;
 
     clear();
 
@@ -30,12 +34,15 @@ void render (std::array<int, 256> array, unsigned int len_x, unsigned int len_y)
         for (unsigned int x = 0; x < len_x; x++) {
 
             SetCursorPos(x*2, y);
-            int index = array[y*len_y + x];
-            putchar(luminosity[index < 11 ? index : 11]);
+            int index = array[y*len_y + x];  // get the "luminosity" (depth) of the point
+            index = index > maxIndex ? maxIndex : index;
+            index = index < 0 ? 0 : index;
+            putchar(luminosity[index]);  // put a character at cursor position
 
         }
     }
 
+    // offset under the donut
     for (unsigned int i = 0; i < 5; i++) {
 
         printf("\n");

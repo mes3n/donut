@@ -4,9 +4,9 @@
 #ifdef unix
 
 #include <array>
-#include <unistd.h>
+#include <unistd.h>  // sleep
 
-void render (std::array<int, 256>, unsigned int, unsigned int);
+void render (std::array<int, 576>, unsigned int, unsigned int);
 
 
 #endif  // unix
