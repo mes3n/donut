@@ -119,7 +119,7 @@ int main (int argc, char **argv) {
 
                 float points[3] = {x, y, z};
 
-                // rotate the points my the matrixes
+                // rotate the points my the matrices
                 rotate_around_x(points, rx);
                 rotate_around_y(points, ry);
                 rotate_around_z(points, rz);
