@@ -1,7 +1,3 @@
  ## Create a Spinning ASCII Donut in the Terminal
 
- The donut is represented by a Torus shape generated with trigonometric functions.
- The shape is then rotated around the x- y- and z-axis using matrices.
-
- Use the -dx, -dy, and -dz arguments to manipulate the donuts rotations,
- the donuts shape can a also be changed with -R and -r. 
+ This aims to be a more compact version, look to main branch for more info.
