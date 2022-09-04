@@ -5,12 +5,17 @@
 void renderChar(char c, int x, int y) {
 
     // offsets for where to display the donut
-    int offY = 2;
-    int offX = 2 * 2;
+    int offY = 1;
+    int offX = 1 * 2;
 
     //  setts the cursor position to x, y with the width and height of a charactes as units
-    printf("\033[1m\033[%d;%dH\033[48;5;%dm%2c\e[0m", offY + y, offX + x, 255 - x/2, c);
+    printf("\033[%d;%dH\033[1;38;5;%dm%2c\033[0m", offY + y, offX + x, 51 + ((x+y)/10)*36, c);
 
+    // https://chrisyeh96.github.io/2020/03/28/terminal-colors.html
+    // http://web.archive.org/web/20131009193526/http://bitmote.com/index.php?post/2012/11/19/Using-ANSI-Color-Codes-to-Colorize-Your-Bash-Prompt-on-Linux
+
+    // , 30 + (x+y) % 7
+    // 255 - x/2,
     // "m%3d\e[0m"
 }
 
@@ -26,6 +31,10 @@ void clear () {
 
 void render (std::array<int, 576> array, unsigned int len_x, unsigned int len_y) {
 
+
+    // \033[?25l
+    printf("\033[H\033[J");
+
     static char luminosity[] = " .,,-~::;!**++##$$@";
     int maxIndex = 18;
 
@@ -38,4 +47,6 @@ void render (std::array<int, 576> array, unsigned int len_x, unsigned int len_y)
             renderChar(luminosity[index], x*2, y);  // put a character at position
         }
     }
+
+    // printf("\033[?25h");
 }

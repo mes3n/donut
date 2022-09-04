@@ -44,15 +44,13 @@ int main (int argc, char **argv) {
     float dry = M_PI/72;
     float drz = 0;
 
-    clear();
-
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
-            std::cout << "\nuse -dx, -dy, and/or -dz to enter custom values for rotations,\n" \
+            std::cout << "\nUse -dx, -dy, and/or -dz to enter custom values for rotations,\n" \
                       << "defualt values are approximatly 0.044 (pi/72) for x and y rotation.\n\n" \
                       << "Use -R to change to radius of the whole donut,\n" \
-                      << "and use -r to change the radius of the donut's 'edge'\n" \
-                      << "The sum of R and r must be less than 12." \
+                      << "and use -r to change the radius of the donut's 'edge.'\n" \
+                      << "The sum of R and r must be less than 12. " \
                       << "Defualt values are R=7 and r=3.\n\n";
             return 0;
         }
@@ -62,7 +60,7 @@ int main (int argc, char **argv) {
                 std::stof (argv[i + 1]);
             }
             catch (std::invalid_argument &) {
-                std::cout <<  "Enter a valid value for the argument.\n";
+                std::cout <<  "Enter a valid value for the argument.\n\n";
                 return 0;
             }
 
@@ -94,13 +92,15 @@ int main (int argc, char **argv) {
         }
     }
 
-    if (R + r > 0.5*std::min(LEN_X, LEN_Y)) {
-        std::cout << "the sum of R and r is too large, the donut wont fit!\n";
+    if (round(R + r) >= 0.5*std::min(LEN_X, LEN_Y)) {
+        std::cout << "The sum of R and r is too large, the donut wont fit!\n\n";
         return 0;
     }
 
     const unsigned int bigCORNERS = pow(R, 2);
     const unsigned int smaCORNERS = 2*pow(r, 2);
+
+    clear();
 
     while (true) {
         grid.fill(0);  // reset the grid's z values

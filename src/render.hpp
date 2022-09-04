@@ -9,7 +9,6 @@
 void render (std::array<int, 576>, unsigned int, unsigned int);
 void clear ();
 
-
 #endif  // unix
 
 
