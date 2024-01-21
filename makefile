@@ -23,5 +23,5 @@ all: clean main
 
 .PHONY: clean
 clean:
-	rm -r $(BIN_DIR) $(OBJ_DIR)
-	mkdir $(BIN_DIR) $(OBJ_DIR)
+	rm -fr $(BIN_DIR) $(OBJ_DIR)
+	mkdir -p $(BIN_DIR) $(OBJ_DIR)
