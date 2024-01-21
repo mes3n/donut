@@ -7,9 +7,9 @@
                         int main(){float R=7;
                 float r=2.5;float rx=0.5;float ry=
               0;float rz=0;int g[400];int i,j;printf(
-           "\033[2J");while(true){memset(g,0,1600);float
-          cx,sx,cy,sy,cz,sz;cx=cos(rx);sx=sin(rx);cy=cos(ry
-         );sy=sin(ry);cz=cos(rz);   sz=sin(rz);for(i=0;i<48;
+           "\033[2J");while(1){memset(g,0,1600);float cx
+          ,sx,cy,sy,cz,sz;cx=cos(rx);sx=sin(rx);cy=cos(ry
+        );sy=sin(ry);cz=cos(rz);   sz=sin(rz);for(i=0;i<48;
        i++){float ca,sa;ca=cos        (M_PI*i/24);sa=sin(M_PI*
        i/24);for(j=0;j<24;j++          ){int a,b,c,ii;float ct,
       st,x,y,z;ct=cos(M_PI*j/           12);st=sin(M_PI*j/12);
